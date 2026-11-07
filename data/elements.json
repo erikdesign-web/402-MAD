@@ -33,6 +33,15 @@
       "wind": 60,
       "heat": 35
     },
+    "corner_roundness_by_category": {
+      "banks": 65,
+      "trees": 85,
+      "terraces": 55,
+      "climate_shelters": 75,
+      "parks": 60,
+      "restaurants": 45,
+      "squares": 60
+    },
     "roundness": 85,
     "stroke": 100,
     "vibration": 68

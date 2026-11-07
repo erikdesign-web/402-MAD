@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=9" />
+  <link rel="stylesheet" href="styles.css?v=25" />
 </head>
 <body>
 
@@ -165,21 +165,244 @@
         <h2 class="full-madrid-infographic__title">Infografia01</h2>
         <img class="full-madrid-separator" src="Extras/Separador.svg" alt="" aria-hidden="true" />
       </div>
-      <figure class="full-madrid-infographic__item full-madrid-infographic__item--scroll scroll-reveal"
-              tabindex="0" role="region" aria-label="Infografía 1, desliza horizontalmente para explorarla">
-        <img src="Infografia/Infografia01.svg" alt="Infografía 1 de los 21 distritos de Madrid" />
-      </figure>
-      <div class="full-madrid-infographic__divider full-madrid-infographic__divider--between scroll-reveal">
-        <h2 class="full-madrid-infographic__title">Infografia02</h2>
-        <img class="full-madrid-separator" src="Extras/Separador.svg" alt="" aria-hidden="true" />
+      <section class="info-carousel scroll-reveal" id="infographicCarousel"
+               aria-label="Infografías de espacios de descanso">
+        <div class="info-carousel__slides" aria-live="polite">
+          <article class="info-carousel__slide" role="group" aria-roledescription="diapositiva"
+                   aria-label="1 de 7">
+            <div class="info-carousel__card" data-question="¿Dónde encuentras un banco cuando más lo necesitas?" tabindex="0"
+                 role="group" aria-label="Bancos">
+              <img class="info-carousel__icon" src="FORMAS/Banco.svg" alt="" />
+              <span class="info-carousel__card-divider" aria-hidden="true"></span>
+              <div class="info-carousel__copy">
+                <h3>Bancos</h3>
+                <p>Un banco convierte cualquier paseo en una oportunidad para hacer una pausa, observar el barrio y recuperar fuerzas.</p>
+              </div>
+            </div>
+            <div class="info-carousel__visual" tabindex="0">
+              <img class="info-carousel__image" src="Infografia/bancosINFO.svg" alt="Distribución de bancos" />
+            </div>
+          </article>
+          <article class="info-carousel__slide" role="group" aria-roledescription="diapositiva"
+                   aria-label="2 de 7" hidden>
+            <div class="info-carousel__card" data-question="¿Qué hace que una terraza invite a quedarse?" tabindex="0"
+                 role="group" aria-label="Terrazas">
+              <img class="info-carousel__icon" src="FORMAS/Terraza.svg" alt="" />
+              <span class="info-carousel__card-divider" aria-hidden="true"></span>
+              <div class="info-carousel__copy">
+                <h3>Terrazas</h3>
+                <p>Las terrazas llevan la vida cotidiana al espacio público y crean puntos de encuentro junto a calles y plazas.</p>
+              </div>
+            </div>
+            <div class="info-carousel__visual" tabindex="0">
+              <img class="info-carousel__image" src="Infografia/terrazasINFO.svg" alt="Distribución de terrazas" />
+            </div>
+          </article>
+          <article class="info-carousel__slide" role="group" aria-roledescription="diapositiva"
+                   aria-label="3 de 7" hidden>
+            <div class="info-carousel__card" data-question="¿Cómo influyen los locales en el ritmo de la calle?" tabindex="0"
+                 role="group" aria-label="Locales">
+              <img class="info-carousel__icon" src="FORMAS/Local.svg" alt="" />
+              <span class="info-carousel__card-divider" aria-hidden="true"></span>
+              <div class="info-carousel__copy">
+                <h3>Locales</h3>
+                <p>Los comercios y espacios de actividad mantienen las calles vivas y acercan servicios a quienes viven cerca.</p>
+              </div>
+            </div>
+            <div class="info-carousel__visual" tabindex="0">
+              <img class="info-carousel__image" src="Infografia/localesINFO.svg" alt="Distribución de locales" />
+            </div>
+          </article>
+          <article class="info-carousel__slide" role="group" aria-roledescription="diapositiva"
+                   aria-label="4 de 7" hidden>
+            <div class="info-carousel__card" data-question="¿Qué actividades caben en una plaza de barrio?" tabindex="0"
+                 role="group" aria-label="Plazas">
+              <img class="info-carousel__icon" src="FORMAS/Plaza.svg" alt="" />
+              <span class="info-carousel__card-divider" aria-hidden="true"></span>
+              <div class="info-carousel__copy">
+                <h3>Plazas</h3>
+                <p>Una plaza puede ser lugar de paso, juego, conversación o descanso: su diseño influye en cómo se comparte.</p>
+              </div>
+            </div>
+            <div class="info-carousel__visual" tabindex="0">
+              <img class="info-carousel__image" src="Infografia/plazasINFO.svg" alt="Distribución de plazas" />
+            </div>
+          </article>
+          <article class="info-carousel__slide" role="group" aria-roledescription="diapositiva"
+                   aria-label="5 de 7" hidden>
+            <div class="info-carousel__card" data-question="¿Qué necesita un parque para ser un buen refugio?" tabindex="0"
+                 role="group" aria-label="Parques">
+              <img class="info-carousel__icon" src="FORMAS/Parque.svg" alt="" />
+              <span class="info-carousel__card-divider" aria-hidden="true"></span>
+              <div class="info-carousel__copy">
+                <h3>Parques</h3>
+                <p>Los parques ofrecen espacio para desconectar, pero su sombra, accesibilidad y cercanía determinan quién puede disfrutarlos.</p>
+              </div>
+            </div>
+            <div class="info-carousel__visual" tabindex="0">
+              <img class="info-carousel__image" src="Infografia/parquesINFO.svg" alt="Distribución de parques" />
+            </div>
+          </article>
+          <article class="info-carousel__slide" role="group" aria-roledescription="diapositiva"
+                   aria-label="6 de 7" hidden>
+            <div class="info-carousel__card" data-question="¿Cuánto cambia una calle cuando tiene árboles?" tabindex="0"
+                 role="group" aria-label="Árboles">
+              <img class="info-carousel__icon" src="FORMAS/Arbol.svg" alt="" />
+              <span class="info-carousel__card-divider" aria-hidden="true"></span>
+              <div class="info-carousel__copy">
+                <h3>Árboles</h3>
+                <p>El arbolado aporta sombra y transforma la experiencia de caminar por la ciudad, especialmente en los días calurosos.</p>
+              </div>
+            </div>
+            <div class="info-carousel__visual" tabindex="0">
+              <img class="info-carousel__image" src="Infografia/árbolesINFO.svg" alt="Distribución de árboles" />
+            </div>
+          </article>
+          <article class="info-carousel__slide" role="group" aria-roledescription="diapositiva"
+                   aria-label="7 de 7" hidden>
+            <div class="info-carousel__card" data-question="¿Dónde buscar alivio durante una ola de calor?" tabindex="0"
+                 role="group" aria-label="Refugios">
+              <img class="info-carousel__icon" src="FORMAS/Refugio.svg" alt="" />
+              <span class="info-carousel__card-divider" aria-hidden="true"></span>
+              <div class="info-carousel__copy">
+                <h3>Refugios</h3>
+                <p>Los refugios climáticos son espacios donde encontrar unas condiciones más confortables cuando el calor aprieta.</p>
+              </div>
+            </div>
+            <div class="info-carousel__visual" tabindex="0">
+              <img class="info-carousel__image" src="Infografia/refugiosINFO.svg" alt="Distribución de refugios climáticos" />
+            </div>
+          </article>
+        </div>
+        <template id="infoCarouselDetailsTemplate">
+          <div class="info-carousel__details">
+            <img src="Infografia/numeros.svg" alt="Números de referencia de los distritos" />
+            <ol>
+              <li>Centro</li>
+              <li>Arganzuela</li>
+              <li>Retiro</li>
+              <li>Salamanca</li>
+              <li>Chamartín</li>
+              <li>Tetuán</li>
+              <li>Chamberí</li>
+              <li>Fuencarral-El Pardo</li>
+              <li>Moncloa-Aravaca</li>
+              <li>Latina</li>
+              <li>Carabanchel</li>
+              <li>Usera</li>
+              <li>Puente de Vallecas</li>
+              <li>Moratalaz</li>
+              <li>Ciudad Lineal</li>
+              <li>Hortaleza</li>
+              <li>Villaverde</li>
+              <li>Villa de Vallecas</li>
+              <li>Vicálvaro 2500</li>
+              <li>San Blas-Canillejas</li>
+              <li>Barajas</li>
+            </ol>
+          </div>
+        </template>
+        <div class="info-carousel__controls" role="group" aria-label="Seleccionar infografía">
+          <button class="info-carousel__dot is-active" type="button" aria-label="Mostrar Bancos"
+                  aria-pressed="true" data-carousel-index="0"></button>
+          <button class="info-carousel__dot" type="button" aria-label="Mostrar Terrazas"
+                  aria-pressed="false" data-carousel-index="1"></button>
+          <button class="info-carousel__dot" type="button" aria-label="Mostrar Locales"
+                  aria-pressed="false" data-carousel-index="2"></button>
+          <button class="info-carousel__dot" type="button" aria-label="Mostrar Plazas"
+                  aria-pressed="false" data-carousel-index="3"></button>
+          <button class="info-carousel__dot" type="button" aria-label="Mostrar Parques"
+                  aria-pressed="false" data-carousel-index="4"></button>
+          <button class="info-carousel__dot" type="button" aria-label="Mostrar Árboles"
+                  aria-pressed="false" data-carousel-index="5"></button>
+          <button class="info-carousel__dot" type="button" aria-label="Mostrar Refugios"
+                  aria-pressed="false" data-carousel-index="6"></button>
+        </div>
+      </section>
+      <div class="full-madrid-comparison">
+        <div class="full-madrid-infographic__divider full-madrid-infographic__divider--between scroll-reveal">
+          <h2 class="full-madrid-infographic__title">Infografia02</h2>
+          <img class="full-madrid-separator" src="Extras/Separador.svg" alt="" aria-hidden="true" />
+        </div>
+        <div class="district-comparison scroll-reveal" aria-label="Comparativa de espacios de consumo y gratuitos">
+        <figure class="district-comparison__panel district-comparison__panel--left" tabindex="0">
+          <img src="Infografia/infografiaIZQ.svg" alt="Espacios de consumo" />
+          <p class="district-comparison__label">espacios de consumo</p>
+          <ul class="district-comparison__districts" aria-label="Distritos">
+            <li>Centro</li>
+            <li>Arganzuela</li>
+            <li>Retiro</li>
+            <li>Salamanca</li>
+            <li>Chamartín</li>
+            <li>Tetuán</li>
+            <li>Chamberí</li>
+            <li>Fuencarral-El Pardo</li>
+            <li>Moncloa-Aravaca</li>
+            <li>Latina</li>
+            <li>Carabanchel</li>
+            <li>Usera</li>
+            <li>Puente de Vallecas</li>
+            <li>Moratalaz</li>
+            <li>Ciudad Lineal</li>
+            <li>Hortaleza</li>
+            <li>Villaverde</li>
+            <li>Villa de Vallecas</li>
+            <li>Vicálvaro</li>
+            <li>San Blas-Canillejas</li>
+            <li>Barajas</li>
+          </ul>
+        </figure>
+        <figure class="district-comparison__panel district-comparison__panel--right" tabindex="0">
+          <img src="Infografia/infografiaDER.svg" alt="Espacios gratuitos" />
+          <p class="district-comparison__label">espacios gratuitos</p>
+          <ul class="district-comparison__districts" aria-label="Distritos">
+            <li>Centro</li>
+            <li>Arganzuela</li>
+            <li>Retiro</li>
+            <li>Salamanca</li>
+            <li>Chamartín</li>
+            <li>Tetuán</li>
+            <li>Chamberí</li>
+            <li>Fuencarral-El Pardo</li>
+            <li>Moncloa-Aravaca</li>
+            <li>Latina</li>
+            <li>Carabanchel</li>
+            <li>Usera</li>
+            <li>Puente de Vallecas</li>
+            <li>Moratalaz</li>
+            <li>Ciudad Lineal</li>
+            <li>Hortaleza</li>
+            <li>Villaverde</li>
+            <li>Villa de Vallecas</li>
+            <li>Vicálvaro</li>
+            <li>San Blas-Canillejas</li>
+            <li>Barajas</li>
+          </ul>
+        </figure>
+        </div>
       </div>
-      <figure class="full-madrid-infographic__item scroll-reveal">
-        <img src="Infografia/Infografia02.svg" alt="Infografía 2 de los 21 distritos de Madrid" />
-      </figure>
     </div>
+
+    <footer class="site-footer">
+      <div class="site-footer__content">
+        <p class="site-footer__brand">402-MAD</p>
+        <p class="site-footer__credit">Desarrollada y diseñada por</p>
+        <nav class="site-footer__links" aria-label="Perfiles de Instagram">
+          <a href="https://www.instagram.com/erikk.design/" target="_blank" rel="noopener noreferrer">
+            Instagram <span>@erikk.design</span>
+          </a>
+          <a href="https://www.instagram.com/ro.idml/" target="_blank" rel="noopener noreferrer">
+            Instagram <span>@ro.idml</span>
+          </a>
+          <a href="https://www.instagram.com/sxndsgn/" target="_blank" rel="noopener noreferrer">
+            Instagram <span>@sxndsgn</span>
+          </a>
+        </nav>
+      </div>
+    </footer>
 
   </section>
 
-  <script src="script.js?v=29"></script>
+  <script src="script.js?v=36"></script>
 </body>
 </html>

@@ -7,9 +7,18 @@
   const mapView       = document.getElementById('mapView');
   const mapSquare     = document.getElementById('mapSquare');
   const fullMadridInfographic = document.getElementById('fullMadridInfographic');
-  const firstInfographicScroller = document.querySelector(
-    '.full-madrid-infographic__item--scroll'
+  const infographicSlides = Array.from(
+    document.querySelectorAll('.info-carousel__slide')
   );
+  const infographicDots = Array.from(
+    document.querySelectorAll('.info-carousel__dot')
+  );
+  const infographicDetailsTemplate = document.getElementById(
+    'infoCarouselDetailsTemplate'
+  );
+  document.querySelectorAll('.info-carousel__visual').forEach((visual) => {
+    visual.appendChild(infographicDetailsTemplate.content.cloneNode(true));
+  });
   const timeGlow      = document.getElementById('timeGlow');
   const districtNavTitle = document.getElementById('districtNavTitle');
   const districtShapePreview = document.getElementById('districtShapePreview');
@@ -410,6 +419,166 @@
     });
   }
 
+  function roundSvgPathCorners(pathData, roundness, viewBoxWidth) {
+    const tokens = pathData.match(/[a-zA-Z]|[-+]?(?:\d*\.?\d+)(?:[eE][-+]?\d+)?/g);
+    if (!tokens) return pathData;
+
+    const argumentCounts = { M: 2, L: 2, H: 1, V: 1, C: 6, S: 4, Q: 4, T: 2, A: 7 };
+    const subpaths = [];
+    let subpath;
+    let current = { x: 0, y: 0 };
+    let command;
+    let index = 0;
+
+    while (index < tokens.length) {
+      if (/^[a-zA-Z]$/.test(tokens[index])) {
+        command = tokens[index];
+        index += 1;
+        if (command.toUpperCase() === 'Z') return pathData;
+      }
+      if (!command) return pathData;
+
+      const upperCommand = command.toUpperCase();
+      const argumentCount = argumentCounts[upperCommand];
+      if (!argumentCount || index + argumentCount > tokens.length) return pathData;
+      const args = tokens.slice(index, index + argumentCount).map(Number);
+      if (!args.every(Number.isFinite)) return pathData;
+      index += argumentCount;
+      const relative = command !== upperCommand;
+
+      if (upperCommand === 'M') {
+        current = {
+          x: relative ? current.x + args[0] : args[0],
+          y: relative ? current.y + args[1] : args[1]
+        };
+        subpath = { start: current, segments: [] };
+        subpaths.push(subpath);
+        command = relative ? 'l' : 'L';
+        continue;
+      }
+      if (!subpath) return pathData;
+
+      let end;
+      if (upperCommand === 'H') {
+        end = { x: relative ? current.x + args[0] : args[0], y: current.y };
+      } else if (upperCommand === 'V') {
+        end = { x: current.x, y: relative ? current.y + args[0] : args[0] };
+      } else {
+        const endpointIndex = upperCommand === 'C' ? 4
+          : upperCommand === 'S' || upperCommand === 'Q' ? 2
+            : upperCommand === 'A' ? 5 : 0;
+        end = {
+          x: relative ? current.x + args[endpointIndex] : args[endpointIndex],
+          y: relative ? current.y + args[endpointIndex + 1] : args[endpointIndex + 1]
+        };
+      }
+
+      const isLine = ['L', 'H', 'V'].includes(upperCommand);
+      subpath.segments.push({
+        start: current,
+        end,
+        isLine,
+        commandText: isLine ? '' : `${command} ${args.join(' ')}`
+      });
+      current = end;
+    }
+
+    const curveRadius = (viewBoxWidth * 0.16 * roundness) / 100;
+    const formatPoint = (point) => `${point.x.toFixed(3)} ${point.y.toFixed(3)}`;
+
+    return subpaths.map(({ start, segments }) => {
+      const corners = new Map();
+      for (let segmentIndex = 0; segmentIndex < segments.length - 1; segmentIndex += 1) {
+        const incoming = segments[segmentIndex];
+        const outgoing = segments[segmentIndex + 1];
+        if (!incoming.isLine || !outgoing.isLine) continue;
+
+        const incomingX = incoming.end.x - incoming.start.x;
+        const incomingY = incoming.end.y - incoming.start.y;
+        const outgoingX = outgoing.end.x - outgoing.start.x;
+        const outgoingY = outgoing.end.y - outgoing.start.y;
+        const incomingLength = Math.hypot(incomingX, incomingY);
+        const outgoingLength = Math.hypot(outgoingX, outgoingY);
+        if (incomingLength === 0 || outgoingLength === 0) continue;
+
+        const dot = (incomingX * outgoingX + incomingY * outgoingY)
+          / (incomingLength * outgoingLength);
+        const turnAngle = Math.acos(Math.max(-1, Math.min(1, dot)));
+        if (turnAngle < 0.12) continue;
+
+        const trim = Math.min(
+          curveRadius * Math.tan(turnAngle / 2),
+          incomingLength * 0.45,
+          outgoingLength * 0.45
+        );
+        if (trim <= 0) continue;
+
+        const vertex = incoming.end;
+        corners.set(segmentIndex, {
+          vertex,
+          before: {
+            x: vertex.x - (incomingX / incomingLength) * trim,
+            y: vertex.y - (incomingY / incomingLength) * trim
+          },
+          after: {
+            x: vertex.x + (outgoingX / outgoingLength) * trim,
+            y: vertex.y + (outgoingY / outgoingLength) * trim
+          }
+        });
+      }
+
+      let roundedPath = `M ${formatPoint(start)}`;
+      segments.forEach((segment, segmentIndex) => {
+        const corner = corners.get(segmentIndex);
+        if (segment.isLine) {
+          roundedPath += ` L ${formatPoint(corner ? corner.before : segment.end)}`;
+        } else {
+          roundedPath += ` ${segment.commandText}`;
+        }
+        if (corner) {
+          roundedPath += ` Q ${formatPoint(corner.vertex)} ${formatPoint(corner.after)}`;
+        }
+      });
+      return roundedPath;
+    }).join(' ');
+  }
+
+  function replaceSvgShapeWithPath(element, pathData) {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    Array.from(element.attributes).forEach(({ name, value }) => {
+      if (!['points', 'x1', 'y1', 'x2', 'y2'].includes(name)) {
+        path.setAttribute(name, value);
+      }
+    });
+    path.setAttribute('d', pathData);
+    element.replaceWith(path);
+    return path;
+  }
+
+  function convertSvgLineToPath(line) {
+    return replaceSvgShapeWithPath(
+      line,
+      `M ${line.getAttribute('x1')} ${line.getAttribute('y1')}`
+        + ` L ${line.getAttribute('x2')} ${line.getAttribute('y2')}`
+    );
+  }
+
+  function convertSvgPolylineToPath(polyline) {
+    const coordinates = polyline.getAttribute('points')
+      .trim()
+      .split(/[\s,]+/)
+      .map(Number);
+    if (coordinates.length < 4 || coordinates.length % 2 !== 0
+      || !coordinates.every(Number.isFinite)) {
+      throw new Error('Un polígono SVG tiene coordenadas no válidas.');
+    }
+
+    const pathData = coordinates.reduce((result, coordinate, index) => (
+      result + `${index === 0 ? 'M' : index % 2 === 0 ? ' L' : ' '}${coordinate}`
+    ), '');
+    return replaceSvgShapeWithPath(polyline, pathData);
+  }
+
   function setTileStrokeWidth(tile, thickness) {
     const strokeElements = tileStrokeElements.get(tile);
     if (!strokeElements) return;
@@ -426,7 +595,20 @@
   }
 
   async function renderMapForms(district) {
-    const formTemplates = await Promise.all(forms.map((form) => loadFormSvg(form.file)));
+    const [formTemplates, visualData] = await Promise.all([
+      Promise.all(forms.map((form) => loadFormSvg(form.file))),
+      loadClimateData()
+    ]);
+    const cornerRoundness = visualData.visual
+      && visualData.visual.corner_roundness_by_category;
+    forms.forEach((form) => {
+      const roundness = cornerRoundness && cornerRoundness[form.count];
+      if (!Number.isFinite(roundness) || roundness < 0 || roundness > 100) {
+        throw new Error(
+          `data/elements.json no contiene una redondez válida para ${form.count}.`
+        );
+      }
+    });
     const formTemplateByFile = new Map(
       forms.map((form, index) => [form.file, formTemplates[index]])
     );
@@ -642,10 +824,28 @@
       placedCounts.set(form.file, currentCount - (currentCount - maximumCount - excessCount));
     }
 
-    placements.forEach(({ x, y, form, layer, depth }) => {
+    const roundedPlacementIndices = placements.map((_, index) => index);
+    for (let index = roundedPlacementIndices.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(random() * (index + 1));
+      [roundedPlacementIndices[index], roundedPlacementIndices[swapIndex]] = [
+        roundedPlacementIndices[swapIndex],
+        roundedPlacementIndices[index]
+      ];
+    }
+    const roundedPlacementCount = Math.round(placements.length * 0.3);
+    const roundedPlacements = new Set(
+      roundedPlacementIndices.slice(0, roundedPlacementCount)
+    );
+
+    placements.forEach(({ x, y, form, layer, depth }, placementIndex) => {
       const image = makeFormSvg(formTemplateByFile.get(form.file));
       image.classList.add('map-tile');
       image.dataset.form = form.count;
+      const roundness = roundedPlacements.has(placementIndex)
+        ? cornerRoundness[form.count]
+        : 0;
+      if (roundness >= 50) image.classList.add('map-tile--rounded');
+      else if (roundness > 0) image.classList.add('map-tile--beveled');
       if (form.file === 'Local.svg') image.classList.add('map-tile--local');
       if (form.file === 'Refugio.svg') image.classList.add('map-tile--refuge');
       if (form.file === 'Terraza.svg') image.classList.add('map-tile--terrace');
@@ -663,9 +863,23 @@
       image.dataset.strokeUnitScale = String(
         viewBox.width / (tileDisplaySize * getLayerScale(layer))
       );
-      const strokeElements = getPrimaryStrokeElements(image);
+      const strokeElements = getPrimaryStrokeElements(image).map((element) => {
+        if (roundness <= 0) return element;
+        if (element.localName === 'line') return convertSvgLineToPath(element);
+        if (element.localName === 'polyline') return convertSvgPolylineToPath(element);
+        return element;
+      });
       strokeElements.forEach((element) => {
         element.setAttribute('data-dynamic-stroke', '');
+        if (roundness > 0) {
+          if (element.localName === 'path') {
+            element.setAttribute(
+              'd',
+              roundSvgPathCorners(element.getAttribute('d'), roundness, viewBox.width)
+            );
+          }
+          element.style.strokeLinejoin = roundness >= 50 ? 'round' : 'bevel';
+        }
       });
       tileStrokeElements.set(image, strokeElements);
       setTileStrokeWidth(image, form.opening === undefined ? 0.75 : 0.25);
@@ -1061,50 +1275,18 @@
   }
 
   /* ---------- Eventos ---------- */
-  let infographicScrollTarget;
-  let infographicScrollFrame;
-  firstInfographicScroller.addEventListener('wheel', (event) => {
-    if (event.deltaY === 0 || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-
-    const lineHeight = Number.parseFloat(getComputedStyle(firstInfographicScroller).lineHeight);
-    const delta = event.deltaY * (
-      event.deltaMode === WheelEvent.DOM_DELTA_LINE
-        ? (Number.isFinite(lineHeight) ? lineHeight : 16)
-        : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
-          ? firstInfographicScroller.clientHeight
-          : 1
-    );
-    const maxScroll = firstInfographicScroller.scrollWidth
-      - firstInfographicScroller.clientWidth;
-    const currentTarget = infographicScrollTarget ?? firstInfographicScroller.scrollLeft;
-    const nextTarget = currentTarget + delta;
-    const boundedTarget = Math.max(0, Math.min(maxScroll, nextTarget));
-    const consumed = boundedTarget - currentTarget;
-    const remainder = nextTarget - boundedTarget;
-    if (consumed === 0) return;
-
-    infographicScrollTarget = boundedTarget;
-    if (infographicScrollFrame === undefined) {
-      const animateInfographicScroll = () => {
-        const difference = infographicScrollTarget - firstInfographicScroller.scrollLeft;
-        if (Math.abs(difference) < 0.5) {
-          firstInfographicScroller.scrollLeft = infographicScrollTarget;
-          infographicScrollFrame = undefined;
-          infographicScrollTarget = undefined;
-          return;
-        }
-
-        firstInfographicScroller.scrollLeft += difference * 0.16;
-        infographicScrollFrame = window.requestAnimationFrame(animateInfographicScroll);
-      };
-      infographicScrollFrame = window.requestAnimationFrame(animateInfographicScroll);
-    }
-
-    event.preventDefault();
-    if (remainder !== 0) {
-      window.scrollBy({ top: remainder, behavior: 'smooth' });
-    }
-  }, { passive: false });
+  infographicDots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      infographicSlides.forEach((slide, slideIndex) => {
+        slide.hidden = slideIndex !== index;
+      });
+      infographicDots.forEach((carouselDot, dotIndex) => {
+        const isActive = dotIndex === index;
+        carouselDot.classList.toggle('is-active', isActive);
+        carouselDot.setAttribute('aria-pressed', String(isActive));
+      });
+    });
+  });
 
   fullMadridBtn.addEventListener('click', () => openMap(madridDefinition.name));
 
