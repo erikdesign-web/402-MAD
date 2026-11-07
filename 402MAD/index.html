@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>402 - MAD — Cómo quieres vivir tu experiencia</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=9" />
+</head>
+<body>
+
+  <!-- ============================ HERO ============================ -->
+  <section class="view hero is-active" id="hero">
+    <div class="hero__decorations" aria-hidden="true">
+      <div class="hero__icon hero__icon--tree" data-depth="0.45">
+        <img src="FORMAS/Arbol.svg" alt="" />
+      </div>
+      <div class="hero__icon hero__icon--bench" data-depth="0.7">
+        <img src="FORMAS/Banco.svg" alt="" />
+      </div>
+      <div class="hero__icon hero__icon--local" data-depth="0.55">
+        <img src="FORMAS/Local.svg" alt="" />
+      </div>
+      <div class="hero__icon hero__icon--park" data-depth="0.8">
+        <img src="FORMAS/Parque.svg" alt="" />
+      </div>
+      <div class="hero__icon hero__icon--plaza" data-depth="0.65">
+        <img src="FORMAS/Plaza.svg" alt="" />
+      </div>
+      <div class="hero__icon hero__icon--shelter" data-depth="0.5">
+        <img src="FORMAS/Refugio.svg" alt="" />
+      </div>
+      <div class="hero__icon hero__icon--terrace" data-depth="0.35">
+        <img src="FORMAS/Terraza.svg" alt="" />
+      </div>
+    </div>
+
+    <div class="hero__content">
+      <h1 class="hero__title">402-MAD</h1>
+      <p class="hero__subtitle">Protocolo de descanso</p>
+
+      <p class="hero__question">¿Cómo quieres vivir tu experiencia?</p>
+
+      <div class="options">
+        <button class="btn" id="fullMadridBtn" type="button">
+          <span class="btn__arrow" aria-hidden="true">→</span>
+          <span>Madrid al completo</span>
+        </button>
+
+        <div class="dropdown" id="districtsDropdown">
+          <button class="btn" id="districtsBtn" type="button"
+                  aria-haspopup="true" aria-expanded="false">
+            <span class="btn__arrow" aria-hidden="true">→</span>
+            <span>Vista por distritos</span>
+          </button>
+
+          <ul class="dropdown__menu" id="districtsMenu" role="menu">
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ MAPA ============================ -->
+  <section class="view map-view" id="mapView">
+
+    <div class="map-workspace">
+    <div class="time-glow" id="timeGlow" aria-hidden="true"></div>
+
+    <aside class="time-panel" aria-label="Filtros de hora y categoría">
+      <div class="time-panel__categories" role="radiogroup" aria-label="Categoría">
+        <button class="category-option" type="button" role="radio" aria-checked="false" aria-label="Frío (I)" data-category="i">
+          <span class="category-option__initial" aria-hidden="true">i</span>
+          <span class="category-option__circle" aria-hidden="true"></span>
+        </button>
+        <button class="category-option" type="button" role="radio" aria-checked="false" aria-label="Lluvia (P)" data-category="p">
+          <span class="category-option__initial" aria-hidden="true">p</span>
+          <span class="category-option__circle" aria-hidden="true"></span>
+        </button>
+        <button class="category-option" type="button" role="radio" aria-checked="false" aria-label="Calor (V)" data-category="v">
+          <span class="category-option__initial" aria-hidden="true">v</span>
+          <span class="category-option__circle" aria-hidden="true"></span>
+        </button>
+        <button class="category-option" type="button" role="radio" aria-checked="false" aria-label="Viento (O)" data-category="o">
+          <span class="category-option__initial" aria-hidden="true">o</span>
+          <span class="category-option__circle" aria-hidden="true"></span>
+        </button>
+      </div>
+      <p class="climate-status" id="climateStatus" role="alert" hidden></p>
+
+      <label class="time-slider__label" for="timeSlider">Hora</label>
+      <span class="time-slider__line" aria-hidden="true"></span>
+      <span class="time-slider__thumb" id="timeThumb" aria-hidden="true"></span>
+      <input class="time-slider" id="timeSlider" type="range" min="0" max="1439" value="720"
+             aria-label="Seleccionar hora" aria-valuetext="12:00" />
+      <span class="time-slider__endpoint time-slider__endpoint--start" aria-hidden="true">00:00</span>
+      <output class="time-slider__value" id="timeValue" for="timeSlider" aria-live="off">12:00</output>
+      <span class="time-slider__endpoint time-slider__endpoint--end" aria-hidden="true">23:59</span>
+    </aside>
+
+    <div class="map-bar scroll-reveal">
+      <div class="legend">
+        <span class="legend__item"><img src="FORMAS/Banco.svg" alt="" />Banco</span>
+        <span class="legend__item"><img src="FORMAS/Arbol.svg" alt="" />Árbol</span>
+        <span class="legend__item"><img src="FORMAS/Terraza.svg" alt="" />Terraza</span>
+        <span class="legend__item"><img src="FORMAS/Refugio.svg" alt="" />Refugio</span>
+        <span class="legend__item"><img src="FORMAS/Parque.svg" alt="" />Parque</span>
+        <span class="legend__item"><img src="FORMAS/Local.svg" alt="" />Local</span>
+        <span class="legend__item"><img src="FORMAS/Plaza.svg" alt="" />Plaza</span>
+      </div>
+
+    </div>
+
+    <div class="map-canvas scroll-reveal">
+      <div class="map-square" id="mapSquare" role="img" aria-label="Formas del mapa"></div>
+    </div>
+
+    <nav class="district-nav" id="districtNav" aria-label="Distritos">
+      <div class="district-nav__heading">
+        <p class="district-nav__title" id="districtNavTitle">CENTRO</p>
+        <svg class="district-nav__shape" id="districtShapePreview" aria-hidden="true">
+          <path></path>
+        </svg>
+        <button class="district-nav__menu-toggle" id="districtNavToggle" type="button"
+                aria-label="Abrir menú de distritos" aria-expanded="false"
+                aria-controls="districtNavLinks">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+      <div class="district-nav__links" id="districtNavLinks">
+      </div>
+      <div class="district-nav__madrid">
+        <button class="district-nav__link" id="fullMadridNavBtn" type="button">Madrid</button>
+      </div>
+    </nav>
+
+    <button class="terrace-toggle" id="terraceToggle" type="button"
+            aria-label="Resaltar terrazas y locales" aria-pressed="false">
+      <span class="terrace-toggle__thumb" aria-hidden="true"></span>
+    </button>
+
+    <button class="map-export" id="exportMapBtn" type="button"
+            aria-label="Exportar mapa del distrito como PNG" title="Descargar PNG">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" />
+      </svg>
+    </button>
+
+    <button class="map-export map-presentation" id="presentationBtn" type="button"
+            aria-label="Activar pantalla limpia" aria-pressed="false"
+            title="Pantalla limpia (Esc para salir)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M8 3H3v5m0-5 7 7m6-7h5v5m0-5-7 7M3 16v5h5m-5 0 7-7m6 7h5v-5m0 5-7-7" />
+      </svg>
+    </button>
+    </div>
+
+    <div class="full-madrid-infographic" id="fullMadridInfographic" hidden>
+      <div class="full-madrid-infographic__divider scroll-reveal">
+        <h2 class="full-madrid-infographic__title">Infografia01</h2>
+        <img class="full-madrid-separator" src="Extras/Separador.svg" alt="" aria-hidden="true" />
+      </div>
+      <figure class="full-madrid-infographic__item full-madrid-infographic__item--scroll scroll-reveal"
+              tabindex="0" role="region" aria-label="Infografía 1, desliza horizontalmente para explorarla">
+        <img src="Infografia/Infografia01.svg" alt="Infografía 1 de los 21 distritos de Madrid" />
+      </figure>
+      <div class="full-madrid-infographic__divider full-madrid-infographic__divider--between scroll-reveal">
+        <h2 class="full-madrid-infographic__title">Infografia02</h2>
+        <img class="full-madrid-separator" src="Extras/Separador.svg" alt="" aria-hidden="true" />
+      </div>
+      <figure class="full-madrid-infographic__item scroll-reveal">
+        <img src="Infografia/Infografia02.svg" alt="Infografía 2 de los 21 distritos de Madrid" />
+      </figure>
+    </div>
+
+  </section>
+
+  <script src="script.js?v=29"></script>
+</body>
+</html>

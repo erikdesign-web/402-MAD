@@ -1,0 +1,40 @@
+{
+  "id": "BANK_CEN_001",
+  "category": "banks",
+  "district": "Centro",
+  "access": "free",
+  "category_climates": {
+    "i": "cold",
+    "p": "rain",
+    "o": "wind",
+    "v": "heat"
+  },
+
+  "data": {
+    "pedestrian_flow": 68,
+    "comfort": 85,
+    "opening_hours": {
+      "type": "always_available",
+      "schedule": null
+    },
+    "climate_sensitivity": {
+      "rain": 72,
+      "heat": 35,
+      "wind": 60,
+      "cold": 45
+    }
+  },
+
+  "visual": {
+    "opacity": 72,
+    "opacity_by_climate": {
+      "cold": 45,
+      "rain": 72,
+      "wind": 60,
+      "heat": 35
+    },
+    "roundness": 85,
+    "stroke": 100,
+    "vibration": 68
+  }
+}
