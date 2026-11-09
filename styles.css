@@ -1373,6 +1373,10 @@ body {
   background: #000000;
   color: #ffffff;
 }
+#exportMapBtn,
+#presentationBtn {
+  display: none;
+}
 
 .map-square--highlight-terraces .map-tile--terrace,
 .map-square--highlight-terraces .map-tile--local {

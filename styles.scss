@@ -1502,6 +1502,8 @@ body {
 
 .map-presentation { right: 72px; }
 .map-presentation[aria-pressed="true"] { background: $fg; color: $bg; }
+#exportMapBtn,
+#presentationBtn { display: none; }
 
 .map-square--highlight-terraces .map-tile--terrace,
 .map-square--highlight-terraces .map-tile--local {
